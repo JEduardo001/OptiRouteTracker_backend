@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class DtoCreateUser {
-    @NotBlank()
+    @NotBlank
     private String username;
     @Email
     private String email;

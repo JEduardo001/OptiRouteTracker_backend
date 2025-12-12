@@ -1,4 +1,4 @@
-package com.SwSoftware.OptiRouteTracker.exceptions.customExceptions.exceptionsCreateResources;
+package com.SwSoftware.OptiRouteTracker.exceptions.user;
 
 public class ExceptionUserUsernameAlreadyInUse extends RuntimeException{
     public ExceptionUserUsernameAlreadyInUse(){}

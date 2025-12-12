@@ -4,18 +4,16 @@ import com.SwSoftware.OptiRouteTracker.dtos.dtosCreate.DtoCreateUser;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.DtoUser;
 import com.SwSoftware.OptiRouteTracker.entities.RoleEntity;
 import com.SwSoftware.OptiRouteTracker.entities.UserEntity;
-import com.SwSoftware.OptiRouteTracker.exceptions.customExceptions.exceptionsCreateResources.ExceptionPasswordsDoNotMatch;
-import com.SwSoftware.OptiRouteTracker.exceptions.customExceptions.exceptionsCreateResources.ExceptionUserEmailAlreadyInUse;
-import com.SwSoftware.OptiRouteTracker.exceptions.customExceptions.exceptionsCreateResources.ExceptionUserUsernameAlreadyInUse;
-import com.SwSoftware.OptiRouteTracker.exceptions.customExceptions.exceptionsNotFoundResourcers.ExceptionUserNotFound;
+import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionPasswordsDoNotMatch;
+import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserEmailAlreadyInUse;
+import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserUsernameAlreadyInUse;
+import com.SwSoftware.OptiRouteTracker.exceptions.resource.ExceptionUserNotFound;
 import com.SwSoftware.OptiRouteTracker.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.Role;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -24,7 +22,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService){
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService
+                       ){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
