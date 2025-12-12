@@ -1,11 +1,9 @@
 package com.SwSoftware.OptiRouteTracker.services;
 
 import com.SwSoftware.OptiRouteTracker.entities.RoleEntity;
-import com.SwSoftware.OptiRouteTracker.exceptions.customExceptions.exceptionsNotFoundResourcers.ExceptionRoleNotFound;
+import com.SwSoftware.OptiRouteTracker.exceptions.resource.ExceptionRoleNotFound;
 import com.SwSoftware.OptiRouteTracker.repositories.RoleRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
 
 @Service
 public class RoleService {

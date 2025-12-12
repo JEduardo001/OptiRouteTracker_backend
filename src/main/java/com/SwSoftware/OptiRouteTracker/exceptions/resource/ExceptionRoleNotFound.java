@@ -1,4 +1,4 @@
-package com.SwSoftware.OptiRouteTracker.exceptions.customExceptions.exceptionsNotFoundResourcers;
+package com.SwSoftware.OptiRouteTracker.exceptions.resource;
 
 public class ExceptionRoleNotFound extends RuntimeException{
     public ExceptionRoleNotFound(){}

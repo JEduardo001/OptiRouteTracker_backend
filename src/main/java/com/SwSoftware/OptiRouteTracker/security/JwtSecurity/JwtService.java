@@ -19,7 +19,7 @@ public class JwtService {
 
     public String createToken(String username){
         return Jwts.builder()
-                .signWith(getSecret(), SignatureAlgorithm.ES256)
+                .signWith(getSecret(), SignatureAlgorithm.HS256)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 60000 * 30))
                 .setSubject(username)
