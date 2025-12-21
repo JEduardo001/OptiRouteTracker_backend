@@ -14,7 +14,9 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name = "users")
+@Table(name = "users", indexes = {
+        @Index(name = "indexUsername", columnList = "username")
+})
 public class UserEntity {
 
     @Id
@@ -33,4 +35,6 @@ public class UserEntity {
     )
     @ManyToMany(fetch = FetchType.EAGER)
     private List<RoleEntity> roles;
+    @OneToMany(mappedBy = "createdBy")
+    private List<ProductEntity> productsCreated;
 }
