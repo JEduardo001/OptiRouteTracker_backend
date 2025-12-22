@@ -1,5 +1,6 @@
-package com.SwSoftware.OptiRouteTracker.controllers.auth;
+package com.SwSoftware.OptiRouteTracker.controllers.inventory;
 
+import com.SwSoftware.OptiRouteTracker.constants.ApiPaths;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosCreate.DtoCreateInventory;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoInventoryWithoutProducts;
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
@@ -10,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/inventory")
+@RequestMapping(ApiPaths.baseApi + "/inventory")
 public class InventoryController {
 
     private final InventoryService inventoryService;

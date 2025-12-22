@@ -9,6 +9,5 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = {RoleMapper.class})
 public interface UserMapper {
-    @BeanMapping(builder = @Builder(disableBuilder = true))
     DtoUser toDto(UserEntity user);
 }

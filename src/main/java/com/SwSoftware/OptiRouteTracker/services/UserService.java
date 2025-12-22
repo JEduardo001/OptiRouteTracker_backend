@@ -1,6 +1,7 @@
 package com.SwSoftware.OptiRouteTracker.services;
 
 import com.SwSoftware.OptiRouteTracker.dtos.dtosCreate.DtoCreateUser;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.DtoRole;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.DtoUser;
 import com.SwSoftware.OptiRouteTracker.entities.RoleEntity;
 import com.SwSoftware.OptiRouteTracker.entities.UserEntity;
@@ -9,11 +10,14 @@ import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserEmailAlready
 import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserUsernameAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.resource.ExceptionUserNotFound;
 import com.SwSoftware.OptiRouteTracker.repositories.UserRepository;
+import com.SwSoftware.OptiRouteTracker.utils.mapper.RoleMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -21,12 +25,20 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
+    private final RoleMapper roleMapper;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService,RoleMapper roleMapper
                        ){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
+        this.roleMapper = roleMapper;
+    }
+
+    public void existUserById(Long idUser){
+        if (!userRepository.existsById(idUser)) {
+            throw new ExceptionUserNotFound();
+        }
     }
 
     public DtoUser createUser(DtoCreateUser data){
@@ -59,6 +71,8 @@ public class UserService {
 
         userRepository.save(user);
 
+        List<DtoRole> rolesDto = roles.stream().map(r -> roleMapper.toDto(r)).collect(Collectors.toList());
+
         return DtoUser.builder()
                 .id(user.getId())
                 .username(user.getUsername())
@@ -66,10 +80,19 @@ public class UserService {
                 .email(data.getEmail())
                 .birthday(data.getBirthday())
                 .lastname(data.getLastname())
-                .roles(roles).build();
+                .roles(rolesDto).build();
     }
 
     public UserEntity getUserByUsername(String username){
-        return userRepository.findByUsername(username).orElseThrow(ExceptionUserNotFound::new);
+        return orThrow(userRepository.findByUsername(username));
     }
+
+    public UserEntity getUserById(Long idUser){
+        return orThrow(userRepository.findById(idUser));
+    }
+
+    private UserEntity orThrow(Optional<UserEntity> user) {
+        return user.orElseThrow(ExceptionUserNotFound::new);
+    }
+
 }

@@ -1,9 +1,7 @@
-package com.SwSoftware.OptiRouteTracker.dtos.dtosEntities;
+package com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product;
 
-import com.SwSoftware.OptiRouteTracker.entities.CategoryEntity;
-import com.SwSoftware.OptiRouteTracker.entities.InventoryEntity;
-import com.SwSoftware.OptiRouteTracker.entities.UserEntity;
-import jakarta.persistence.*;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.DtoCategory;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.DtoUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,10 +10,10 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class DtoProduct {
 
     private Long id;
@@ -26,6 +24,6 @@ public class DtoProduct {
     private String serialNumber;
     private Integer batch;
     private boolean active;
-    private UserEntity createdBy;
-    private List<CategoryEntity> category;
+    private DtoUser createdBy;
+    private List<DtoCategory> category;
 }

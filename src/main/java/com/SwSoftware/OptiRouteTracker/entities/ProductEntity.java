@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -33,7 +34,7 @@ public class ProductEntity {
     @ManyToMany
     @JoinTable(
             name = "category_products",
-            joinColumns = @JoinColumn(name = "inventory_id"),
+            joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private List<CategoryEntity> category;

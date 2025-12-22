@@ -1,7 +1,6 @@
 package com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory;
 
-import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.DtoProduct;
-import com.SwSoftware.OptiRouteTracker.entities.ProductEntity;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoProduct;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

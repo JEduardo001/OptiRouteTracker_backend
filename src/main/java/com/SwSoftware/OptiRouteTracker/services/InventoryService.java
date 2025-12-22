@@ -1,14 +1,13 @@
 package com.SwSoftware.OptiRouteTracker.services;
 
 import com.SwSoftware.OptiRouteTracker.dtos.dtosCreate.DtoCreateInventory;
-import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.DtoProduct;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoInventoryWithProducts;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoInventoryWithoutProducts;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoProduct;
 import com.SwSoftware.OptiRouteTracker.entities.InventoryEntity;
 import com.SwSoftware.OptiRouteTracker.entities.ProductEntity;
 import com.SwSoftware.OptiRouteTracker.exceptions.inventory.ExceptionInventoryNameAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.inventory.ExceptionInventoryNotFound;
-import com.SwSoftware.OptiRouteTracker.exceptions.product.ExceptionProductNotFound;
 import com.SwSoftware.OptiRouteTracker.repositories.InventoryRepository;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.InventoryMapper;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.ProductMapper;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +37,16 @@ public class InventoryService {
         this.productMapper = productMapper;
     }
 
+    public void existInventory(Long idInventory){
+        if(!inventoryRepository.existsById(idInventory)){
+            throw new ExceptionInventoryNotFound();
+        }
+    }
+
+    public InventoryEntity getInventoryById(Long idInventory){
+        return inventoryRepository.findById(idInventory).orElseThrow(ExceptionInventoryNotFound::new);
+    }
+
     public DtoInventoryWithoutProducts createInventory(DtoCreateInventory data){
         if(inventoryRepository.existsByName(data.getName())){
            throw new ExceptionInventoryNameAlreadyInUse();
@@ -53,7 +61,6 @@ public class InventoryService {
                 .products(new LinkedHashSet<>())
                 .build()
         );
-        System.out.println(inventory.getName());
         return inventoryMapper.toDtoByEntity(inventory);
     }
 
@@ -64,11 +71,17 @@ public class InventoryService {
 
         Page<ProductEntity> products = getProductsInventory(idInventory,0,25);
 
-        DtoInventoryWithProducts inventoryWithProducts = inventoryMapper.dtoToDtoWithProducts(inventory);
         List<DtoProduct> productsDto = products.getContent().stream().map(productMapper::toDto).toList();
-        inventoryWithProducts.setProducts(productsDto);
 
-        return inventoryWithProducts;
+        return DtoInventoryWithProducts.builder()
+                .id(inventory.getId())
+                .name(inventory.getName())
+                .quantity(inventory.getQuantity())
+                .createDate(inventory.getCreateDate())
+                .description(inventory.getDescription())
+                .location(inventory.getLocation())
+                .products(productsDto)
+                .build();
     }
 
     public Page<ProductEntity> getProductsInventory(Long idInventory,Integer page, Integer size){
@@ -82,9 +95,7 @@ public class InventoryService {
 
     @Transactional
     public void removeInventoryProduct(Long idProduct, Long idInventory){
-        if (!inventoryRepository.existsById(idInventory)) {
-            throw new ExceptionInventoryNotFound();
-        }
+        existInventory(idInventory);
         productService.existProduct(idProduct);
         productService.deleteProduct(idProduct,idInventory);
     }
