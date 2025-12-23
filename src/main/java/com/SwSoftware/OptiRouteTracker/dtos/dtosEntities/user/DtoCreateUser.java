@@ -1,11 +1,11 @@
-package com.SwSoftware.OptiRouteTracker.dtos.dtosCreate;
+package com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -32,5 +32,6 @@ public class DtoCreateUser {
     private String passwordRepeat;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
-    private List<Long> rolesId;
+    @NotNull
+    private Set<Long> rolesId;
 }

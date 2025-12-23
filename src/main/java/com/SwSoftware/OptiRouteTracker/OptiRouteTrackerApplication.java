@@ -9,5 +9,4 @@ public class OptiRouteTrackerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(OptiRouteTrackerApplication.class, args);
 	}
-
 }

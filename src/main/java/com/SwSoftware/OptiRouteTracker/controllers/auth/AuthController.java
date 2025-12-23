@@ -1,10 +1,9 @@
 package com.SwSoftware.OptiRouteTracker.controllers.auth;
 
 import com.SwSoftware.OptiRouteTracker.dtos.dtosAuth.DtoLogin;
-import com.SwSoftware.OptiRouteTracker.dtos.dtosCreate.DtoCreateUser;
-import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.DtoUser;
+import com.SwSoftware.OptiRouteTracker.constants.ApiPaths;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoCreateUser;
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
-import com.SwSoftware.OptiRouteTracker.entities.UserEntity;
 import com.SwSoftware.OptiRouteTracker.security.JwtSecurity.JwtService;
 import com.SwSoftware.OptiRouteTracker.services.UserService;
 import jakarta.validation.Valid;
@@ -16,7 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(ApiPaths.baseApi + "/auth")
 public class AuthController {
 
     private final UserService userService;
