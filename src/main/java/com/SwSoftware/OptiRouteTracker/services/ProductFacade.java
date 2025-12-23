@@ -1,6 +1,6 @@
 package com.SwSoftware.OptiRouteTracker.services;
 
-import com.SwSoftware.OptiRouteTracker.dtos.dtosCreate.DtoCreateProduct;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoCreateProduct;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoProduct;
 import com.SwSoftware.OptiRouteTracker.entities.CategoryEntity;
 import com.SwSoftware.OptiRouteTracker.entities.InventoryEntity;

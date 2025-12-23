@@ -1,4 +1,4 @@
-package com.SwSoftware.OptiRouteTracker.dtos.dtosEntities;
+package com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

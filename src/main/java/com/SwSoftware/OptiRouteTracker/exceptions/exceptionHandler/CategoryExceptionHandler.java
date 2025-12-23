@@ -1,6 +1,7 @@
 package com.SwSoftware.OptiRouteTracker.exceptions.exceptionHandler;
 
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
+import com.SwSoftware.OptiRouteTracker.exceptions.category.ExceptionCategoryNameAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.category.ExceptionCategoryNotFound;
 import com.SwSoftware.OptiRouteTracker.exceptions.inventory.ExceptionInventoryNameAlreadyInUse;
 import org.springframework.http.HttpStatus;
@@ -21,4 +22,15 @@ public class CategoryExceptionHandler {
                         .message("Category not found")
                         .build());
     }
+
+    @ExceptionHandler(ExceptionCategoryNameAlreadyInUse.class)
+    public ResponseEntity<DtoResponseApi> ExceptionCategoryNameAlreadyInUse(ExceptionCategoryNameAlreadyInUse ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(DtoResponseApi.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .message("Name Category already in use")
+                        .build());
+    }
+
+
 }

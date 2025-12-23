@@ -1,16 +1,14 @@
 package com.SwSoftware.OptiRouteTracker.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Data
 @Entity
+@Builder
 @Table(name = "category")
 public class CategoryEntity {
 
@@ -20,4 +18,6 @@ public class CategoryEntity {
     private String name;
     private boolean active;
     private Integer quantityProducts;
+
+
 }

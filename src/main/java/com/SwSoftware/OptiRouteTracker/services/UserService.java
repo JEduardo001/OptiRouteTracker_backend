@@ -1,8 +1,8 @@
 package com.SwSoftware.OptiRouteTracker.services;
 
-import com.SwSoftware.OptiRouteTracker.dtos.dtosCreate.DtoCreateUser;
-import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.DtoRole;
-import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.DtoUser;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.role.DtoRole;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoCreateUser;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoUser;
 import com.SwSoftware.OptiRouteTracker.entities.RoleEntity;
 import com.SwSoftware.OptiRouteTracker.entities.UserEntity;
 import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionPasswordsDoNotMatch;

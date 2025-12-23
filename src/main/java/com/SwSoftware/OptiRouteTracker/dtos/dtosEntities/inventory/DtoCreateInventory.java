@@ -1,14 +1,10 @@
-package com.SwSoftware.OptiRouteTracker.dtos.dtosCreate;
+package com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory;
 
-import com.SwSoftware.OptiRouteTracker.entities.ProductEntity;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -19,5 +15,4 @@ public class DtoCreateInventory {
     private String name;
     private String description;
     private String location;
-
 }
