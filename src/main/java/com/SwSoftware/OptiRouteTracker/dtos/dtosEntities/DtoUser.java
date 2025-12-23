@@ -19,5 +19,5 @@ public class DtoUser {
     private String name;
     private String lastname;
     private LocalDate birthday;
-    private List<RoleEntity> roles;
+    private List<DtoRole> roles;
 }

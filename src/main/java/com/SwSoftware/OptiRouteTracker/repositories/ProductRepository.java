@@ -15,4 +15,5 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     @Query("DELETE FROM ProductEntity p WHERE p.id = :idProduct AND p.inventory.id = :inventoryId")
     void deleteByIdAndInventoryId(Long idProduct, Long inventoryId);
 
+
 }
