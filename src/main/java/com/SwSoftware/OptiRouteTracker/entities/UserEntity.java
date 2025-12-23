@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -27,6 +28,7 @@ public class UserEntity {
     private String name;
     private String lastname;
     private String password;
+    private boolean active;
     private LocalDate birthday;
     @JoinTable(
             name = "user_roles",
@@ -34,7 +36,7 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<RoleEntity> roles;
+    private Set<RoleEntity> roles;
     @OneToMany(mappedBy = "createdBy")
     private List<ProductEntity> productsCreated;
 }
