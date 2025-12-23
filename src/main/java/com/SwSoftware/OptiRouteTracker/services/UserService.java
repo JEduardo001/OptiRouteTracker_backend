@@ -1,6 +1,5 @@
 package com.SwSoftware.OptiRouteTracker.services;
 
-import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.role.DtoRole;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoCreateUser;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoUpdateUser;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoUser;
@@ -9,15 +8,13 @@ import com.SwSoftware.OptiRouteTracker.entities.UserEntity;
 import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionPasswordsDoNotMatch;
 import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserEmailAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserUsernameAlreadyInUse;
-import com.SwSoftware.OptiRouteTracker.exceptions.resource.ExceptionUserNotFound;
+import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserNotFound;
 import com.SwSoftware.OptiRouteTracker.repositories.UserRepository;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.RoleMapper;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.UserMapper;
-import org.apache.catalina.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.Role;
 import java.util.*;
 import java.util.stream.Collectors;
 

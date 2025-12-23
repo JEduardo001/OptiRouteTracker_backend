@@ -8,4 +8,6 @@ import java.util.Set;
 
 public interface RoleRepository extends JpaRepository<RoleEntity,Long> {
     Set<RoleEntity> findByIdIn(Set<Long> idsRoles);
+    boolean existsByName(String name);
+    boolean existsByNameAndIdNot(String name, Long id);
 }
