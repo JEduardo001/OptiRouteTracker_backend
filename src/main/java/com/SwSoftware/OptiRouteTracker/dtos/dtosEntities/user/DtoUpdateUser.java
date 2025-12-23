@@ -1,26 +1,36 @@
 package com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user;
 
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.role.DtoRole;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DtoUser {
+public class DtoUpdateUser {
+    @NotNull
+    @Positive
     private Long id;
+    @NotBlank
     private String username;
     private String email;
+    @NotBlank
     private String name;
-    private String lastname;
+    @NotNull
     private boolean active;
+    private String lastname;
+    @NotNull
     private LocalDate birthday;
-    private Set<DtoRole> roles;
+    @NotNull
+    private Set<Long> idRoles;
 }
+

@@ -2,6 +2,7 @@ package com.SwSoftware.OptiRouteTracker.services;
 
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.role.DtoRole;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoCreateUser;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoUpdateUser;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoUser;
 import com.SwSoftware.OptiRouteTracker.entities.RoleEntity;
 import com.SwSoftware.OptiRouteTracker.entities.UserEntity;
@@ -11,12 +12,13 @@ import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserUsernameAlre
 import com.SwSoftware.OptiRouteTracker.exceptions.resource.ExceptionUserNotFound;
 import com.SwSoftware.OptiRouteTracker.repositories.UserRepository;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.RoleMapper;
+import com.SwSoftware.OptiRouteTracker.utils.mapper.UserMapper;
+import org.apache.catalina.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import javax.management.relation.Role;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,73 +28,81 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final RoleMapper roleMapper;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService,RoleMapper roleMapper
-                       ){
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService,RoleMapper roleMapper,
+                       UserMapper userMapper){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
         this.roleMapper = roleMapper;
-    }
-
-    public void existUserById(Long idUser){
-        if (!userRepository.existsById(idUser)) {
-            throw new ExceptionUserNotFound();
-        }
-    }
-
-    public DtoUser createUser(DtoCreateUser data){
-
-        if(!data.getPassword().equals(data.getPasswordRepeat())){
-            throw new ExceptionPasswordsDoNotMatch();
-        }
-
-        if (userRepository.existsByUsername(data.getUsername())) {
-            throw new ExceptionUserUsernameAlreadyInUse();
-        }
-
-        if (userRepository.existsByEmail(data.getEmail())) {
-            throw new ExceptionUserEmailAlreadyInUse();
-        }
-
-        List<RoleEntity> roles = new ArrayList<>();
-        if(data.getRolesId() != null){
-            roles = data.getRolesId().stream().map(roleService::getRoleById).toList();
-        }
-
-        UserEntity user = UserEntity.builder()
-                .username(data.getUsername())
-                .name(data.getName())
-                .email(data.getEmail())
-                .birthday(data.getBirthday())
-                .lastname(data.getLastname())
-                .password(passwordEncoder.encode(data.getPassword()))
-                .roles(roles).build();
-
-        userRepository.save(user);
-
-        List<DtoRole> rolesDto = roles.stream().map(r -> roleMapper.toDto(r)).collect(Collectors.toList());
-
-        return DtoUser.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .name(data.getName())
-                .email(data.getEmail())
-                .birthday(data.getBirthday())
-                .lastname(data.getLastname())
-                .roles(rolesDto).build();
-    }
-
-    public UserEntity getUserByUsername(String username){
-        return orThrow(userRepository.findByUsername(username));
+        this.userMapper = userMapper;
     }
 
     public UserEntity getUserById(Long idUser){
         return orThrow(userRepository.findById(idUser));
     }
 
+    public DtoUser createUser(DtoCreateUser request){
+
+        if(!request.getPassword().equals(request.getPasswordRepeat())){
+            throw new ExceptionPasswordsDoNotMatch();
+        }
+
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new ExceptionUserUsernameAlreadyInUse();
+        }
+
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new ExceptionUserEmailAlreadyInUse();
+        }
+
+        Set<RoleEntity> roles = new LinkedHashSet<>();
+        if(request.getRolesId() != null){
+            roles = request.getRolesId().stream().map(roleService::getRoleById).collect(Collectors.toSet());
+        }
+
+        UserEntity user = userMapper.toEntity(request);
+        user.setActive(true);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRoles(roles);
+
+        userRepository.save(user);
+
+        return userMapper.toDto(user);
+    }
+
+    public UserEntity getUserByUsername(String username){
+        return orThrow(userRepository.findByUsername(username));
+    }
+
+    public DtoUser getUser(Long idUser){
+        return userMapper.toDto(orThrow(userRepository.findById(idUser)));
+    }
+
     private UserEntity orThrow(Optional<UserEntity> user) {
         return user.orElseThrow(ExceptionUserNotFound::new);
     }
 
+    public DtoUser updateUser(DtoUpdateUser request){
+        UserEntity user = orThrow(userRepository.findById(request.getId()));
+        Set<RoleEntity> actualRoles = user.getRoles();
+
+        Set<RoleEntity> newRoles = roleService.getRolesByIdsOrThrow(request.getIdRoles());
+        actualRoles.addAll(newRoles);
+
+        user.setUsername(request.getUsername());
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setBirthday(request.getBirthday());
+        user.setLastname(request.getLastname());
+
+       return userMapper.toDto(userRepository.save(user));
+    }
+
+    public void disableUser(Long idUser){
+        UserEntity user = orThrow(userRepository.findById(idUser));
+        user.setActive(false);
+        userRepository.save(user);
+    }
 }
