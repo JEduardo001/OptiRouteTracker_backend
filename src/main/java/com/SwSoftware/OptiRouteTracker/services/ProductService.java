@@ -4,7 +4,9 @@ import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoProduct;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoUpdateProduct;
 import com.SwSoftware.OptiRouteTracker.entities.CategoryEntity;
 import com.SwSoftware.OptiRouteTracker.entities.ProductEntity;
+import com.SwSoftware.OptiRouteTracker.exceptions.product.ExceptionProductNameAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.product.ExceptionProductNotFound;
+import com.SwSoftware.OptiRouteTracker.exceptions.product.ExceptionProductSerialNumberAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.repositories.ProductRepository;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.ProductMapper;
 import jakarta.transaction.Transactional;
@@ -67,6 +69,16 @@ public class ProductService {
 
     public DtoProduct updateProduct(DtoUpdateProduct product){
         ProductEntity productEntity = getProductById(product.getId());
+
+        if(productRepository.existsByNameAndIdNot(product.getName(), product.getId())){
+            throw new ExceptionProductNameAlreadyInUse();
+        }
+
+        if(product.getSerialNumber() != null){
+            if(productRepository.existsBySerialNumberAndIdNot(product.getName(), product.getId())){
+                throw new ExceptionProductSerialNumberAlreadyInUse();
+            }
+        }
 
         List<CategoryEntity> categories = new ArrayList<>();
 

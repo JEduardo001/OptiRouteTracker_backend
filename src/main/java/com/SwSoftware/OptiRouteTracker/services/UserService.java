@@ -83,6 +83,15 @@ public class UserService {
 
     public DtoUser updateUser(DtoUpdateUser request){
         UserEntity user = orThrow(userRepository.findById(request.getId()));
+
+        if(userRepository.existsByUsernameAndIdNot(request.getName(),request.getId())){
+            throw new ExceptionUserUsernameAlreadyInUse();
+        }
+
+        if(userRepository.existsByEmailAndIdNot(request.getName(),request.getId())){
+            throw new ExceptionUserEmailAlreadyInUse();
+        }
+
         Set<RoleEntity> actualRoles = user.getRoles();
 
         Set<RoleEntity> newRoles = roleService.getRolesByIdsOrThrow(request.getIdRoles());

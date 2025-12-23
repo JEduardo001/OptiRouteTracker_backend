@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     Page<ProductEntity> findByInventoryId(Long id, Pageable page);
+    boolean existsByNameAndIdNot(String name, Long id);
+    boolean existsBySerialNumberAndIdNot(String serialNumber, Long id);
     @Modifying
     @Query("DELETE FROM ProductEntity p WHERE p.id = :idProduct AND p.inventory.id = :inventoryId")
     void deleteByIdAndInventoryId(Long idProduct, Long inventoryId);

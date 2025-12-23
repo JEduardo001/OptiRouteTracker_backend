@@ -102,6 +102,11 @@ public class InventoryService {
 
     public DtoInventoryWithoutProducts updateInventory(DtoInventoryWithoutProducts data){
         InventoryEntity inventory = inventoryRepository.findById(data.getId()).orElseThrow(ExceptionInventoryNotFound::new);
+
+        if(inventoryRepository.existsByNameAndIdNot(data.getName(),data.getId())){
+            throw new ExceptionInventoryNameAlreadyInUse();
+        }
+
         inventory.setName(data.getName());
         inventory.setDescription(data.getDescription());
         inventory.setLocation(data.getLocation());

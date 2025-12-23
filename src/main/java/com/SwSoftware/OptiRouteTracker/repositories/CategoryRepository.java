@@ -8,5 +8,6 @@ import java.util.List;
 public interface CategoryRepository extends JpaRepository<CategoryEntity,Long> {
     List<CategoryEntity> findByIdIn(List<Long> ids);
     boolean existsByName(String name);
+    boolean existsByNameAndIdNot(String name,Long id);
 
 }

@@ -2,6 +2,7 @@ package com.SwSoftware.OptiRouteTracker.services;
 
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.category.DtoCategory;
 import com.SwSoftware.OptiRouteTracker.entities.CategoryEntity;
+import com.SwSoftware.OptiRouteTracker.exceptions.category.ExceptionCategoryNameAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.category.ExceptionCategoryNotFound;
 
 import com.SwSoftware.OptiRouteTracker.repositories.CategoryRepository;
@@ -57,6 +58,10 @@ public class CategoryService {
 
     public DtoCategory updateCategory(DtoCategory request){
        CategoryEntity categoryEntity = getCategoryById(request.getId());
+
+       if(categoryRepository.existsByNameAndIdNot(request.getName(), request.getId())){
+           throw new ExceptionCategoryNameAlreadyInUse();
+       }
 
        categoryEntity.setActive(request.isActive());
        categoryEntity.setName(request.getName());
