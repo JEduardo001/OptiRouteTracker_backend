@@ -1,7 +1,7 @@
 package com.SwSoftware.OptiRouteTracker.exceptions;
 
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
-import com.SwSoftware.OptiRouteTracker.exceptions.resource.ExceptionUserNotFound;
+import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserNotFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
