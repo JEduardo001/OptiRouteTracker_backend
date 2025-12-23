@@ -1,9 +1,10 @@
-package com.SwSoftware.OptiRouteTracker.dtos.dtosEntities;
+package com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user;
 
-import com.SwSoftware.OptiRouteTracker.entities.RoleEntity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import lombok.*;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.role.DtoRole;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -1,7 +1,5 @@
 package com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product;
 
-import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.DtoCategory;
-import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.DtoUser;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -10,7 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data

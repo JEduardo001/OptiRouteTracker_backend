@@ -1,7 +1,7 @@
 package com.SwSoftware.OptiRouteTracker.controllers.products;
 
 import com.SwSoftware.OptiRouteTracker.constants.ApiPaths;
-import com.SwSoftware.OptiRouteTracker.dtos.dtosCreate.DtoCreateProduct;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoCreateProduct;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoUpdateProduct;
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
 import com.SwSoftware.OptiRouteTracker.services.ProductFacade;
@@ -24,7 +24,7 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<DtoResponseApi<Object>> getProduct(@RequestParam Integer page, @RequestParam Integer size){
+    public ResponseEntity<DtoResponseApi<Object>> getAllProducts(@RequestParam Integer page, @RequestParam Integer size){
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Products obtained")

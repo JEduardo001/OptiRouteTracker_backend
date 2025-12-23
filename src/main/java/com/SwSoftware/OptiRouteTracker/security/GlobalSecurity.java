@@ -32,7 +32,7 @@ public class GlobalSecurity {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/register","/auth/login/**").permitAll()
+                        .requestMatchers("/api/auth/register","/api/auth/login/**").permitAll()
                         .anyRequest().authenticated())
                 .cors(cors -> cors.configurationSource(corsConfiguration()))
                 .build();

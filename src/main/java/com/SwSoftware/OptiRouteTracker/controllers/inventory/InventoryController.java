@@ -1,7 +1,7 @@
 package com.SwSoftware.OptiRouteTracker.controllers.inventory;
 
 import com.SwSoftware.OptiRouteTracker.constants.ApiPaths;
-import com.SwSoftware.OptiRouteTracker.dtos.dtosCreate.DtoCreateInventory;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoCreateInventory;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoInventoryWithoutProducts;
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
 import com.SwSoftware.OptiRouteTracker.services.InventoryService;
