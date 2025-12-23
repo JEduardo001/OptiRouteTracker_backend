@@ -3,7 +3,6 @@ package com.SwSoftware.OptiRouteTracker.exceptions.exceptionHandler;
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
 import com.SwSoftware.OptiRouteTracker.exceptions.inventory.ExceptionInventoryNameAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.inventory.ExceptionInventoryNotFound;
-import com.SwSoftware.OptiRouteTracker.exceptions.resource.ExceptionRoleNotFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
