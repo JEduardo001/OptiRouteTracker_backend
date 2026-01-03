@@ -1,8 +1,10 @@
 package com.SwSoftware.OptiRouteTracker.services;
 
+import com.SwSoftware.OptiRouteTracker.dtos.DtoPageableResponse;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoCreateUser;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoUpdateUser;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoUser;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoUserLogIn;
 import com.SwSoftware.OptiRouteTracker.entities.RoleEntity;
 import com.SwSoftware.OptiRouteTracker.entities.UserEntity;
 import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionPasswordsDoNotMatch;
@@ -12,6 +14,8 @@ import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserNotFound;
 import com.SwSoftware.OptiRouteTracker.repositories.UserRepository;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.RoleMapper;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.UserMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +38,16 @@ public class UserService {
         this.roleService = roleService;
         this.roleMapper = roleMapper;
         this.userMapper = userMapper;
+    }
+
+    public DtoPageableResponse<DtoUser> getAllUsers(Integer page, Integer size){
+        Page<UserEntity> users = userRepository.findAll(PageRequest.of(page,size));
+        List<DtoUser> dtoUsers = users.getContent().stream().map(userMapper::toDto).collect(Collectors.toList());
+        return new DtoPageableResponse<DtoUser>(
+                users.getTotalElements(),
+                users.getTotalPages(),
+                dtoUsers
+        );
     }
 
     public UserEntity getUserById(Long idUser){
@@ -79,6 +93,10 @@ public class UserService {
 
     private UserEntity orThrow(Optional<UserEntity> user) {
         return user.orElseThrow(ExceptionUserNotFound::new);
+    }
+
+    public DtoUserLogIn getUserToLogin(String username){
+        return userMapper.toUserDtoLogin(getUserByUsername(username));
     }
 
     public DtoUser updateUser(DtoUpdateUser request){

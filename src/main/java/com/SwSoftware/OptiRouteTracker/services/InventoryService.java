@@ -1,5 +1,6 @@
 package com.SwSoftware.OptiRouteTracker.services;
 
+import com.SwSoftware.OptiRouteTracker.dtos.DtoPageableResponse;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoCreateInventory;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoInventoryWithProducts;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoInventoryWithoutProducts;
@@ -88,9 +89,14 @@ public class InventoryService {
         return productService.getProductsByIdInventory(idInventory,PageRequest.of(page,size));
     }
 
-    public List<DtoInventoryWithoutProducts> getAllInventories(Integer page, Integer size){
+    public DtoPageableResponse<DtoInventoryWithoutProducts> getAllInventories(Integer page, Integer size){
         Page<InventoryEntity> inventory = inventoryRepository.findAll(PageRequest.of(page, size));
-        return inventory.getContent().stream().map(inventoryMapper::toDtoWithoutProducts).collect(Collectors.toList());
+        List<DtoInventoryWithoutProducts> in = inventory.getContent().stream().map(inventoryMapper::toDtoWithoutProducts).collect(Collectors.toList());
+        return new DtoPageableResponse<DtoInventoryWithoutProducts>(
+                inventory.getTotalElements(),
+                inventory.getTotalPages(),
+                in
+        );
     }
 
     @Transactional

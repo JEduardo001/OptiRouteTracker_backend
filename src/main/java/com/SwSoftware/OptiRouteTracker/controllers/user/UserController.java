@@ -20,6 +20,16 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping()
+    public ResponseEntity<DtoResponseApi> getAllUsers(@RequestParam Integer page, @RequestParam Integer size){
+        return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
+                .status(HttpStatus.OK.value())
+                .message("Users obtained")
+                .data(userService.getAllUsers(page,size))
+                .build()
+        );
+    }
+
     @GetMapping("/{idUser}")
     public ResponseEntity<DtoResponseApi> getUser(@PathVariable Long idUser){
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()

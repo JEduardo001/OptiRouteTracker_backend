@@ -41,3 +41,4 @@ public class UserEntity {
     @OneToMany(mappedBy = "createdBy")
     private List<ProductEntity> productsCreated;
 }
+

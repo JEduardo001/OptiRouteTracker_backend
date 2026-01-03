@@ -1,5 +1,6 @@
 package com.SwSoftware.OptiRouteTracker.services;
 
+import com.SwSoftware.OptiRouteTracker.dtos.DtoPageableResponse;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.category.DtoCategory;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.role.DtoCreateRole;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.role.DtoRole;
@@ -56,9 +57,14 @@ public class RoleService {
         return new LinkedHashSet<>();
     }
 
-    public Set<DtoRole> getAllRoles(Integer page, Integer size){
+    public DtoPageableResponse<DtoRole> getAllRoles(Integer page, Integer size){
         Page<RoleEntity> roles = roleRepository.findAll(PageRequest.of(page,size));
-        return roles.stream().map(roleMapper::toDto).collect(Collectors.toSet());
+        List<DtoRole> dtoRoles = roles.getContent().stream().map(roleMapper::toDto).collect(Collectors.toList());
+        return new DtoPageableResponse<DtoRole>(
+                roles.getTotalElements(),
+                roles.getTotalPages(),
+                dtoRoles
+        );
     }
 
     public DtoRole getRole(Long idRole){

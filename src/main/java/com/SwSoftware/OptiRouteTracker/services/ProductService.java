@@ -1,5 +1,7 @@
 package com.SwSoftware.OptiRouteTracker.services;
 
+import com.SwSoftware.OptiRouteTracker.dtos.DtoPageableResponse;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.category.DtoCategory;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoProduct;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoUpdateProduct;
 import com.SwSoftware.OptiRouteTracker.entities.CategoryEntity;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -35,9 +38,14 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public List<DtoProduct> getAllProducts(Integer page, Integer size){
-        Pageable s = PageRequest.of(page,size);
-        return productRepository.findAll(s).map(productMapper::toDto).getContent();
+    public DtoPageableResponse<DtoProduct> getAllProducts(Integer page, Integer size){
+        Page<ProductEntity> allProducts = productRepository.findAll(PageRequest.of(page,size));
+        List<DtoProduct> dtoProducts = allProducts.getContent().stream().map(productMapper::toDto).collect(Collectors.toList());
+        return new DtoPageableResponse<DtoProduct>(
+                allProducts.getTotalElements(),
+                allProducts.getTotalPages(),
+                dtoProducts
+        );
     }
 
     public DtoProduct getProduct(Long idProduct){
