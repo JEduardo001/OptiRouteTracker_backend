@@ -2,6 +2,7 @@ package com.SwSoftware.OptiRouteTracker.services;
 
 import com.SwSoftware.OptiRouteTracker.dtos.DtoPageableResponse;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.category.DtoCategory;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.category.DtoCreateCategory;
 import com.SwSoftware.OptiRouteTracker.entities.CategoryEntity;
 import com.SwSoftware.OptiRouteTracker.exceptions.category.ExceptionCategoryNameAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.category.ExceptionCategoryNotFound;
@@ -29,6 +30,19 @@ public class CategoryService {
         this.categoryMapper = categoryMapper;
 
     }
+
+    public DtoCategory createCategory(DtoCreateCategory request){
+        if(categoryRepository.existsByName(request.getName())){
+            throw new ExceptionCategoryNameAlreadyInUse();
+        }
+        return categoryMapper.toDto(categoryRepository.save(CategoryEntity.builder()
+                .active(request.isActive())
+                .name(request.getName())
+                .quantityProducts(0)
+                .build()
+        ));
+    }
+
 
     public DtoPageableResponse<DtoCategory> getAllCategories(Integer page, Integer size){
         Page<CategoryEntity> categories = categoryRepository.findAll(PageRequest.of(page,size));
