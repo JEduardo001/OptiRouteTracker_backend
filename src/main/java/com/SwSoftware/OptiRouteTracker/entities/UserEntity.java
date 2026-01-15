@@ -16,7 +16,8 @@ import java.util.Set;
 @Data
 @Builder
 @Table(name = "users", indexes = {
-        @Index(name = "indexUsername", columnList = "username")
+        @Index(name = "indexUsername", columnList = "username"),
+        @Index(name = "indexEmail", columnList = "email")
 })
 public class UserEntity {
 
@@ -40,3 +41,4 @@ public class UserEntity {
     @OneToMany(mappedBy = "createdBy")
     private List<ProductEntity> productsCreated;
 }
+

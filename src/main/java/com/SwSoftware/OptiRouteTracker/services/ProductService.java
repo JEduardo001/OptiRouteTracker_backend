@@ -1,10 +1,14 @@
 package com.SwSoftware.OptiRouteTracker.services;
 
+import com.SwSoftware.OptiRouteTracker.dtos.DtoPageableResponse;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.category.DtoCategory;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoProduct;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoUpdateProduct;
 import com.SwSoftware.OptiRouteTracker.entities.CategoryEntity;
 import com.SwSoftware.OptiRouteTracker.entities.ProductEntity;
+import com.SwSoftware.OptiRouteTracker.exceptions.product.ExceptionProductNameAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.product.ExceptionProductNotFound;
+import com.SwSoftware.OptiRouteTracker.exceptions.product.ExceptionProductSerialNumberAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.repositories.ProductRepository;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.ProductMapper;
 import jakarta.transaction.Transactional;
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -33,9 +38,14 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public List<DtoProduct> getAllProducts(Integer page, Integer size){
-        Pageable s = PageRequest.of(page,size);
-        return productRepository.findAll(s).map(productMapper::toDto).getContent();
+    public DtoPageableResponse<DtoProduct> getAllProducts(Integer page, Integer size){
+        Page<ProductEntity> allProducts = productRepository.findAll(PageRequest.of(page,size));
+        List<DtoProduct> dtoProducts = allProducts.getContent().stream().map(productMapper::toDto).collect(Collectors.toList());
+        return new DtoPageableResponse<DtoProduct>(
+                allProducts.getTotalElements(),
+                allProducts.getTotalPages(),
+                dtoProducts
+        );
     }
 
     public DtoProduct getProduct(Long idProduct){
@@ -67,6 +77,16 @@ public class ProductService {
 
     public DtoProduct updateProduct(DtoUpdateProduct product){
         ProductEntity productEntity = getProductById(product.getId());
+
+        if(productRepository.existsByNameAndIdNot(product.getName(), product.getId())){
+            throw new ExceptionProductNameAlreadyInUse();
+        }
+
+        if(product.getSerialNumber() != null){
+            if(productRepository.existsBySerialNumberAndIdNot(product.getName(), product.getId())){
+                throw new ExceptionProductSerialNumberAlreadyInUse();
+            }
+        }
 
         List<CategoryEntity> categories = new ArrayList<>();
 

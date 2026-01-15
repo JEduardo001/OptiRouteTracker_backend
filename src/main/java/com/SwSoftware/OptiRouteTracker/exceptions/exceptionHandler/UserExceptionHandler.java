@@ -1,7 +1,7 @@
 package com.SwSoftware.OptiRouteTracker.exceptions.exceptionHandler;
 
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
-import com.SwSoftware.OptiRouteTracker.exceptions.resource.ExceptionUserNotFound;
+import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserNotFound;
 import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionPasswordsDoNotMatch;
 import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserEmailAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserUsernameAlreadyInUse;

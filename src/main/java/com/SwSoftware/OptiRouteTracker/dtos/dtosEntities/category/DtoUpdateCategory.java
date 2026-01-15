@@ -7,13 +7,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DtoCreateCategory {
+@Data
+@Builder
+public class DtoUpdateCategory {
+    @NotNull
+    private Long id;
     @NotBlank
     private String name;
     @NotNull
     private boolean active;
+    @NotNull
+    private Integer quantityProducts;
 }

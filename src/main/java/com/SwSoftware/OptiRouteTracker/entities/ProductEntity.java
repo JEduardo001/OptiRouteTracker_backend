@@ -15,7 +15,9 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "product")
+@Table(name = "product", indexes = {
+        @Index(name = "indexSerialNumber", columnList = "serialNumber")
+})
 public class ProductEntity {
 
     @Id

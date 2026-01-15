@@ -20,6 +20,17 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+
+    @PostMapping()
+    public ResponseEntity<DtoResponseApi> createCategory(@Valid @RequestBody DtoCreateCategory request){
+        return ResponseEntity.status(HttpStatus.CREATED).body(DtoResponseApi.builder()
+                .status(HttpStatus.CREATED.value())
+                .message("Category created")
+                .data(categoryService.createCategory(request))
+                .build()
+        );
+    }
+
     @GetMapping()
     public ResponseEntity<DtoResponseApi> getAllCategories(@RequestParam Integer page, @RequestParam Integer size){
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
@@ -40,24 +51,12 @@ public class CategoryController {
         );
     }
 
-
-
     @PutMapping
     public ResponseEntity<DtoResponseApi> updateCategory(@Valid @RequestBody DtoCategory request){
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Updated category")
                 .data(categoryService.updateCategory(request))
-                .build()
-        );
-    }
-
-    @PutMapping("/{idCategory}")
-    public ResponseEntity<DtoResponseApi> disableCategory(@PathVariable Long idCategory){
-        categoryService.disableCategory(idCategory);
-        return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
-                .status(HttpStatus.OK.value())
-                .message("Category deactivated")
                 .build()
         );
     }
