@@ -1,6 +1,7 @@
 package com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product;
 
 
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.category.DtoCategory;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,14 +20,11 @@ import java.util.List;
 @Builder
 public class DtoCreateProduct {
     @NotNull
-    @Positive
-    private Long idInventory;
+    private Long inventory;
     @NotBlank
     private String name;
     @NotBlank
     private String description;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate createDate;
     @NotNull
     private Integer quantity;
     private String serialNumber;
@@ -35,5 +33,5 @@ public class DtoCreateProduct {
     private boolean active;
     @NotNull
     private Long createdByUserId;
-    private List<Long> idCategories;
+    private List<DtoCategory> categories;
 }

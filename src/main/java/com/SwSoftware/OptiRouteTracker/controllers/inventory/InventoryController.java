@@ -3,6 +3,7 @@ package com.SwSoftware.OptiRouteTracker.controllers.inventory;
 import com.SwSoftware.OptiRouteTracker.constants.ApiPaths;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoCreateInventory;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoInventoryWithoutProducts;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoUpdateInventory;
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
 import com.SwSoftware.OptiRouteTracker.services.InventoryService;
 import jakarta.validation.Valid;
@@ -71,8 +72,8 @@ public class InventoryController {
         );
     }
 
-    @PutMapping("/{idInventory}")
-    public ResponseEntity updateInventory(@Valid @RequestBody DtoInventoryWithoutProducts data){
+    @PutMapping()
+    public ResponseEntity updateInventory(@Valid @RequestBody DtoUpdateInventory data){
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Updated inventory")

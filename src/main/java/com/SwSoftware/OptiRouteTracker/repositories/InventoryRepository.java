@@ -17,7 +17,7 @@ public interface InventoryRepository extends JpaRepository<InventoryEntity, Long
     boolean existsByNameAndIdNot(String name,Long id);
     @Query("""
          select new com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoInventoryWithoutProducts(
-             i.id, i.name, i.description, i.createDate, i.location, i.quantity
+             i.id, i.name, i.description, i.createDate, i.location, i.quantity, i.active
          )
          from InventoryEntity i
          where i.id = :id

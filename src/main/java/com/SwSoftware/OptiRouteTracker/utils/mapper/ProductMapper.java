@@ -12,6 +12,4 @@ import org.mapstruct.*;
 
 public interface ProductMapper {
     DtoProduct toDto(ProductEntity productEntity);
-    ProductEntity toEntity(DtoProduct product);
-    DtoProduct dtoCreateProductToDtoProduct(DtoCreateProduct product);
 }

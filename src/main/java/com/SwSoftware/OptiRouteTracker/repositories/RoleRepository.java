@@ -4,10 +4,9 @@ import com.SwSoftware.OptiRouteTracker.entities.RoleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Set;
 
 public interface RoleRepository extends JpaRepository<RoleEntity,Long> {
-    Set<RoleEntity> findByIdIn(Set<Long> idsRoles);
+    List<RoleEntity> findByIdIn(List<Long> idsRoles);
     boolean existsByName(String name);
     boolean existsByNameAndIdNot(String name, Long id);
 }

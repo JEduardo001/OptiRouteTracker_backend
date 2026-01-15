@@ -58,7 +58,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Product updated")
-                .data(productService.updateProduct(data))
+                .data(productFacade.updateProduct(data))
                 .build()
         );
     }

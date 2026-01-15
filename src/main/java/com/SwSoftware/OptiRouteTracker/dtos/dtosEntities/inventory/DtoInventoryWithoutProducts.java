@@ -24,4 +24,5 @@ public class DtoInventoryWithoutProducts {
     private LocalDateTime createDate;
     private String location;
     private Integer quantity;
+    private Boolean active;
 }

@@ -1,5 +1,6 @@
 package com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product;
 
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.category.DtoCategory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -26,6 +27,8 @@ public class DtoUpdateProduct {
     private String serialNumber;
     private Integer batch;
     @NotNull
+    private Long inventory;
+    @NotNull
     private boolean active;
-    private List<Long> newIdCategories;
+    private List<DtoCategory> categories;
 }

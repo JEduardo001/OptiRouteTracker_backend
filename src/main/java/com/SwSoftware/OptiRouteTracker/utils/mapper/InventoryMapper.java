@@ -11,9 +11,4 @@ import org.mapstruct.Mapper;
 public interface InventoryMapper {
 
     DtoInventoryWithoutProducts toDtoByEntity(InventoryEntity inventory);
-
-    DtoInventoryWithoutProducts toDtoWithoutProducts(InventoryEntity inventory);
-
-    DtoInventoryWithProducts dtoToDtoWithProducts(DtoInventoryWithoutProducts inventory);
-
 }

@@ -5,7 +5,9 @@ import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.category.DtoCategory;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoProduct;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoUpdateProduct;
 import com.SwSoftware.OptiRouteTracker.entities.CategoryEntity;
+import com.SwSoftware.OptiRouteTracker.entities.InventoryEntity;
 import com.SwSoftware.OptiRouteTracker.entities.ProductEntity;
+import com.SwSoftware.OptiRouteTracker.exceptions.inventory.ExceptionInventoryNotFound;
 import com.SwSoftware.OptiRouteTracker.exceptions.product.ExceptionProductNameAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.product.ExceptionProductNotFound;
 import com.SwSoftware.OptiRouteTracker.exceptions.product.ExceptionProductSerialNumberAlreadyInUse;
@@ -28,13 +30,11 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final CategoryService categoryService;
     private final  ProductMapper productMapper;
 
-    public ProductService(ProductRepository productRepository,CategoryService categoryService,
-                          ProductMapper productMapper,UserService userService){
+    public ProductService(ProductRepository productRepository,
+                          ProductMapper productMapper){
         this.productRepository = productRepository;
-        this.categoryService = categoryService;
         this.productMapper = productMapper;
     }
 
@@ -70,41 +70,17 @@ public class ProductService {
         }
     }
 
+    public boolean existsByNameAndIdNot(String name,Long idProduct){
+        return productRepository.existsByNameAndIdNot(name,idProduct);
+    }
+
+    public boolean existsBySerialNumberAndIdNot(String serialNumber,Long idProduct){
+        return productRepository.existsBySerialNumberAndIdNot(serialNumber,idProduct);
+    }
+
     @Transactional
     public void deleteProduct(Long idProduct, Long idInventory){
         productRepository.deleteByIdAndInventoryId(idProduct, idInventory);
-    }
-
-    public DtoProduct updateProduct(DtoUpdateProduct product){
-        ProductEntity productEntity = getProductById(product.getId());
-
-        if(productRepository.existsByNameAndIdNot(product.getName(), product.getId())){
-            throw new ExceptionProductNameAlreadyInUse();
-        }
-
-        if(product.getSerialNumber() != null){
-            if(productRepository.existsBySerialNumberAndIdNot(product.getName(), product.getId())){
-                throw new ExceptionProductSerialNumberAlreadyInUse();
-            }
-        }
-
-        List<CategoryEntity> categories = new ArrayList<>();
-
-        if(product.getNewIdCategories() != null){
-            categories = categoryService.getCategoriesByIdsOrThrow(product.getNewIdCategories());
-        }
-
-        productEntity.setBatch(product.getBatch());
-        productEntity.setActive(product.isActive());
-        productEntity.setDescription(product.getDescription());
-        productEntity.setName(product.getName());
-        productEntity.setQuantity(product.getQuantity());
-        productEntity.setSerialNumber(product.getSerialNumber());
-        productEntity.setCategory(categories);
-
-        productRepository.save(productEntity);
-
-        return productMapper.toDto(productEntity);
     }
 
 }

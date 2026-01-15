@@ -68,9 +68,9 @@ public class UserService {
             throw new ExceptionUserEmailAlreadyInUse();
         }
 
-        Set<RoleEntity> roles = new LinkedHashSet<>();
-        if(request.getRolesId() != null){
-            roles = request.getRolesId().stream().map(roleService::getRoleById).collect(Collectors.toSet());
+        List<RoleEntity> roles = new LinkedList<>();
+        if(request.getRoles() != null){
+            roles = roleService.getRolesByIdsOrThrow(request.getRoles());
         }
 
         UserEntity user = userMapper.toEntity(request);
@@ -110,18 +110,18 @@ public class UserService {
             throw new ExceptionUserEmailAlreadyInUse();
         }
 
-        Set<RoleEntity> actualRoles = user.getRoles();
 
-        Set<RoleEntity> newRoles = roleService.getRolesByIdsOrThrow(request.getIdRoles());
-        actualRoles.addAll(newRoles);
+        List<RoleEntity> newRoles = roleService.getRolesByIdsOrThrow(request.getRoles());
 
         user.setUsername(request.getUsername());
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setBirthday(request.getBirthday());
         user.setLastname(request.getLastname());
+        user.setActive(request.isActive());
+        user.setRoles(newRoles);
 
-       return userMapper.toDto(userRepository.save(user));
+        return userMapper.toDto(userRepository.save(user));
     }
 
     public void disableUser(Long idUser){

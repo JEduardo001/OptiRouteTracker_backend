@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.management.relation.Role;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,16 +46,17 @@ public class RoleService {
         return roleRepository.existsById(idRole);
     }
 
-    public Set<RoleEntity> getRolesByIdsOrThrow(Set<Long> ids) {
-        if(ids != null){
-            Set<RoleEntity> result = roleRepository.findByIdIn(ids);
-            if (result.size() != ids.size()) {
+    public List<RoleEntity> getRolesByIdsOrThrow(List<DtoRole> roles) {
+        if(roles != null){
+            List<Long> rolesId =  roles.stream().map(DtoRole::getId).toList();
+            List<RoleEntity> result = roleRepository.findByIdIn(rolesId);
+            if (result.size() != roles.size()) {
                 throw new ExceptionRoleNotFound();
             }
             return result;
         }
 
-        return new LinkedHashSet<>();
+        return new LinkedList<>();
     }
 
     public DtoPageableResponse<DtoRole> getAllRoles(Integer page, Integer size){

@@ -28,6 +28,8 @@ public class InventoryEntity {
     private LocalDateTime createDate;
     private String location;
     private Integer quantity;
+    private Boolean active;
+    private LocalDateTime disabledAt;
     @OneToMany(mappedBy = "inventory",orphanRemoval = true, cascade = {CascadeType.REMOVE})
     private Set<ProductEntity> products;
 }

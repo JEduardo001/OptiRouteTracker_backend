@@ -21,5 +21,6 @@ public class DtoInventoryWithProducts {
     private LocalDateTime createDate;
     private String location;
     private Integer quantity;
+    private Boolean active;
     private List<DtoProduct> products;
 }

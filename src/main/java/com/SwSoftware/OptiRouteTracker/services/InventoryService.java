@@ -4,6 +4,7 @@ import com.SwSoftware.OptiRouteTracker.dtos.DtoPageableResponse;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoCreateInventory;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoInventoryWithProducts;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoInventoryWithoutProducts;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoUpdateInventory;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoProduct;
 import com.SwSoftware.OptiRouteTracker.entities.InventoryEntity;
 import com.SwSoftware.OptiRouteTracker.entities.ProductEntity;
@@ -13,6 +14,7 @@ import com.SwSoftware.OptiRouteTracker.repositories.InventoryRepository;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.InventoryMapper;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.ProductMapper;
 import jakarta.transaction.Transactional;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -44,13 +46,17 @@ public class InventoryService {
         }
     }
 
+    public boolean existInventoryById(Long id){
+        return inventoryRepository.existsById(id);
+    }
+
     public InventoryEntity getInventoryById(Long idInventory){
         return inventoryRepository.findById(idInventory).orElseThrow(ExceptionInventoryNotFound::new);
     }
 
     public DtoInventoryWithoutProducts createInventory(DtoCreateInventory data){
         if(inventoryRepository.existsByName(data.getName())){
-           throw new ExceptionInventoryNameAlreadyInUse();
+            throw new ExceptionInventoryNameAlreadyInUse();
         }
 
         InventoryEntity inventory = inventoryRepository.save(InventoryEntity.builder()
@@ -59,6 +65,8 @@ public class InventoryService {
                 .location(data.getLocation())
                 .createDate(LocalDateTime.now())
                 .quantity(0)
+                .active(data.getActive())
+                .disabledAt( data.getActive() ? null : LocalDateTime.now())
                 .products(new LinkedHashSet<>())
                 .build()
         );
@@ -91,7 +99,7 @@ public class InventoryService {
 
     public DtoPageableResponse<DtoInventoryWithoutProducts> getAllInventories(Integer page, Integer size){
         Page<InventoryEntity> inventory = inventoryRepository.findAll(PageRequest.of(page, size));
-        List<DtoInventoryWithoutProducts> in = inventory.getContent().stream().map(inventoryMapper::toDtoWithoutProducts).collect(Collectors.toList());
+        List<DtoInventoryWithoutProducts> in = inventory.getContent().stream().map(inventoryMapper::toDtoByEntity).collect(Collectors.toList());
         return new DtoPageableResponse<DtoInventoryWithoutProducts>(
                 inventory.getTotalElements(),
                 inventory.getTotalPages(),
@@ -106,7 +114,7 @@ public class InventoryService {
         productService.deleteProduct(idProduct,idInventory);
     }
 
-    public DtoInventoryWithoutProducts updateInventory(DtoInventoryWithoutProducts data){
+    public DtoInventoryWithoutProducts updateInventory(DtoUpdateInventory data){
         InventoryEntity inventory = inventoryRepository.findById(data.getId()).orElseThrow(ExceptionInventoryNotFound::new);
 
         if(inventoryRepository.existsByNameAndIdNot(data.getName(),data.getId())){
@@ -116,13 +124,15 @@ public class InventoryService {
         inventory.setName(data.getName());
         inventory.setDescription(data.getDescription());
         inventory.setLocation(data.getLocation());
-        inventory.setQuantity(data.getQuantity());
+        inventory.setActive(data.getActive());
+        inventory.setDisabledAt(data.getActive() ? null : LocalDateTime.now());
 
         InventoryEntity inventoryEntity = inventoryRepository.save(inventory);
 
-        return inventoryMapper.toDtoWithoutProducts(inventoryEntity);
+        return inventoryMapper.toDtoByEntity(inventoryEntity);
 
     }
+
     @Transactional
     public void removeInventory(Long idInventory){
         inventoryRepository.deleteByInventoryId(idInventory);

@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 @Builder
 @Data
@@ -31,6 +31,6 @@ public class DtoUpdateUser {
     @NotNull
     private LocalDate birthday;
     @NotNull
-    private Set<Long> idRoles;
+    private List<DtoRole> roles;
 }
 

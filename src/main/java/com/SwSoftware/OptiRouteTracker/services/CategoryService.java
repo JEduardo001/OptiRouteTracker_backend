@@ -54,10 +54,11 @@ public class CategoryService {
         );
     }
 
-    public List<CategoryEntity> getCategoriesByIdsOrThrow(List<Long> ids) {
-        if(ids != null){
-            List<CategoryEntity> result = categoryRepository.findByIdIn(ids);
-            if (result.size() != ids.size()) {
+    public List<CategoryEntity> getCategoriesByIdsOrThrow(List<DtoCategory> categories) {
+        if(categories != null){
+            List<Long> idsCategories = categories.stream().map(DtoCategory::getId).toList();
+            List<CategoryEntity> result = categoryRepository.findByIdIn(idsCategories);
+            if (result.size() != categories.size()) {
                 throw new ExceptionCategoryNotFound();
             }
             return result;
@@ -77,18 +78,18 @@ public class CategoryService {
 
 
     public DtoCategory updateCategory(DtoCategory request){
-       CategoryEntity categoryEntity = getCategoryById(request.getId());
+        CategoryEntity categoryEntity = getCategoryById(request.getId());
 
-       if(categoryRepository.existsByNameAndIdNot(request.getName(), request.getId())){
-           throw new ExceptionCategoryNameAlreadyInUse();
-       }
+        if(categoryRepository.existsByNameAndIdNot(request.getName(), request.getId())){
+            throw new ExceptionCategoryNameAlreadyInUse();
+        }
 
-       categoryEntity.setActive(request.isActive());
-       categoryEntity.setName(request.getName());
-       categoryEntity.setQuantityProducts(request.getQuantityProducts());
+        categoryEntity.setActive(request.isActive());
+        categoryEntity.setName(request.getName());
+        categoryEntity.setQuantityProducts(request.getQuantityProducts());
 
-       categoryRepository.save(categoryEntity);
-       return categoryMapper.toDto(categoryEntity);
+        categoryRepository.save(categoryEntity);
+        return categoryMapper.toDto(categoryEntity);
     }
 
     public void disableCategory(Long idCategory){
