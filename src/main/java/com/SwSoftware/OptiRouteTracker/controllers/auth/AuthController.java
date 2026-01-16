@@ -4,6 +4,7 @@ import com.SwSoftware.OptiRouteTracker.dtos.dtosAuth.DtoLogin;
 import com.SwSoftware.OptiRouteTracker.constants.ApiPaths;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.role.DtoRole;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoCreateUser;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoResetPassword;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoUserLogIn;
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApiLogIn;
@@ -53,6 +54,16 @@ public class AuthController {
                 .message("logged")
                 .token(token)
                 .user(userService.getUserToLogin(data.getUsername()))
+                .build()
+        );
+    }
+
+    @PostMapping()
+    public ResponseEntity<DtoResponseApi> resetPassword(@Valid @RequestBody DtoResetPassword request){
+        userService.resetPassword(request);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(DtoResponseApi.builder()
+                .status(HttpStatus.NO_CONTENT.value())
+                .message("Password reset")
                 .build()
         );
     }

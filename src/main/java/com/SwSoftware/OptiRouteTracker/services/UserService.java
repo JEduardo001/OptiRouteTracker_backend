@@ -1,10 +1,7 @@
 package com.SwSoftware.OptiRouteTracker.services;
 
 import com.SwSoftware.OptiRouteTracker.dtos.DtoPageableResponse;
-import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoCreateUser;
-import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoUpdateUser;
-import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoUser;
-import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoUserLogIn;
+import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.*;
 import com.SwSoftware.OptiRouteTracker.entities.RoleEntity;
 import com.SwSoftware.OptiRouteTracker.entities.UserEntity;
 import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionPasswordsDoNotMatch;
@@ -14,6 +11,7 @@ import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserNotFound;
 import com.SwSoftware.OptiRouteTracker.repositories.UserRepository;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.RoleMapper;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.UserMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -56,9 +54,7 @@ public class UserService {
 
     public DtoUser createUser(DtoCreateUser request){
 
-        if(!request.getPassword().equals(request.getPasswordRepeat())){
-            throw new ExceptionPasswordsDoNotMatch();
-        }
+        verifyPassword(request.getPassword(),request.getPasswordRepeat());
 
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new ExceptionUserUsernameAlreadyInUse();
@@ -128,5 +124,28 @@ public class UserService {
         UserEntity user = orThrow(userRepository.findById(idUser));
         user.setActive(false);
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void resetPassword(DtoResetPassword request){
+        UserEntity user = getUserById(request.getId());
+
+        if (!passwordEncoder.matches(
+                request.getCurrentPassword(),
+                user.getPassword()
+        )) {
+            throw new ExceptionPasswordsDoNotMatch();
+        }
+
+        verifyPassword(request.getNewPassword(),request.getConfirmPassword());
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+    }
+
+    public void verifyPassword(String password, String confirmPassword){
+        if(!password.equals(confirmPassword)){
+            throw new ExceptionPasswordsDoNotMatch();
+        }
     }
 }
