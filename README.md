@@ -1,13 +1,11 @@
 # OptiRouteTracker_backend
-Sistema para la gestión de inventario de un almacén con un módulo secundario para optimización de rutas de entrega.
-
+Sistema para la gestión de inventario de almacén
 
 ## Tecnologías
 
 - Lenguaje: Java  
 - Framework: Spring Boot  
-  - Spring MVC (endpoints síncronos)  
-  - Spring WebFlux (endpoints reactivos)  
+  - Spring MVC
   - Spring Security  
   - Spring Data JPA  
 - Base de datos: PostgreSQL
