@@ -12,6 +12,7 @@ import com.SwSoftware.OptiRouteTracker.repositories.UserRepository;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.RoleMapper;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.UserMapper;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
@@ -29,14 +31,6 @@ public class UserService {
     private final RoleMapper roleMapper;
     private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService,RoleMapper roleMapper,
-                       UserMapper userMapper){
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.roleService = roleService;
-        this.roleMapper = roleMapper;
-        this.userMapper = userMapper;
-    }
 
     public DtoPageableResponse<DtoUser> getAllUsers(Integer page, Integer size){
         Page<UserEntity> users = userRepository.findAll(PageRequest.of(page,size));

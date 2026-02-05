@@ -17,6 +17,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,16 +28,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
     private final  ProductMapper productMapper;
-
-    public ProductService(ProductRepository productRepository,
-                          ProductMapper productMapper){
-        this.productRepository = productRepository;
-        this.productMapper = productMapper;
-    }
 
     public DtoPageableResponse<DtoProduct> getAllProducts(Integer page, Integer size){
         Page<ProductEntity> allProducts = productRepository.findAll(PageRequest.of(page,size));

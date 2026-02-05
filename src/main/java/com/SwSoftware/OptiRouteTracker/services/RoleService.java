@@ -12,6 +12,7 @@ import com.SwSoftware.OptiRouteTracker.exceptions.role.ExceptionRoleNameAlreadyI
 import com.SwSoftware.OptiRouteTracker.exceptions.role.ExceptionRoleNotFound;
 import com.SwSoftware.OptiRouteTracker.repositories.RoleRepository;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.RoleMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,15 +25,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class RoleService {
 
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
 
-    public RoleService(RoleRepository roleRepositor, RoleMapper roleMapper){
-        this.roleRepository = roleRepositor;
-        this.roleMapper = roleMapper;
-    }
 
     public RoleEntity getRoleById(Long idRole){
         return roleRepository.findById(idRole).orElseThrow(ExceptionRoleNotFound::new);

@@ -7,19 +7,17 @@ import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoUpdateInve
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
 import com.SwSoftware.OptiRouteTracker.services.InventoryService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(ApiPaths.baseApi + "/inventory")
+@AllArgsConstructor
 public class InventoryController {
 
     private final InventoryService inventoryService;
-
-    public InventoryController(InventoryService inventoryService){
-        this.inventoryService = inventoryService;
-    }
 
     @PostMapping()
     public ResponseEntity createInventory(@Valid @RequestBody DtoCreateInventory data){

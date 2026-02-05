@@ -6,19 +6,17 @@ import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.role.DtoUpdateRole;
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
 import com.SwSoftware.OptiRouteTracker.services.RoleService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(ApiPaths.baseApi + "/role")
+@AllArgsConstructor
 public class RoleController {
 
     private final RoleService roleService;
-
-    public RoleController(RoleService roleService){
-        this.roleService = roleService;
-    }
 
     @GetMapping()
     public ResponseEntity<DtoResponseApi> getAllRoles(@RequestParam Integer page, @RequestParam Integer size){

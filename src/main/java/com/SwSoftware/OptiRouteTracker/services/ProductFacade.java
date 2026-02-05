@@ -12,6 +12,7 @@ import com.SwSoftware.OptiRouteTracker.exceptions.product.ExceptionProductSerial
 import com.SwSoftware.OptiRouteTracker.utils.mapper.ProductMapper;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ProductFacade {
 
     private final ProductService productService;
@@ -26,17 +28,6 @@ public class ProductFacade {
     private final CategoryService categoryService;
     private final ProductMapper productMapper;
     private final UserService userService;
-
-
-    public ProductFacade(ProductService productService, InventoryService inventoryService,CategoryService categoryService,
-                         ProductMapper productMapper,UserService userService){
-        this.productService = productService;
-        this.inventoryService = inventoryService;
-        this.categoryService = categoryService;
-        this.productMapper = productMapper;
-        this.userService = userService;
-    }
-
 
     @Transactional
     public DtoProduct createProduct(DtoCreateProduct data) {

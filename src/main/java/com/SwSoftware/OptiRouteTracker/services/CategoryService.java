@@ -10,6 +10,7 @@ import com.SwSoftware.OptiRouteTracker.exceptions.category.ExceptionCategoryNotF
 import com.SwSoftware.OptiRouteTracker.repositories.CategoryRepository;
 
 import com.SwSoftware.OptiRouteTracker.utils.mapper.CategoryMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -20,16 +21,11 @@ import java.util.stream.Collectors;
 
 
 @Service
+@AllArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
-
-    public CategoryService(CategoryRepository categoryRepository,CategoryMapper categoryMapper){
-        this.categoryRepository = categoryRepository;
-        this.categoryMapper = categoryMapper;
-
-    }
 
     public DtoCategory createCategory(DtoCreateCategory request){
         if(categoryRepository.existsByName(request.getName())){

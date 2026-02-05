@@ -7,21 +7,19 @@ import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
 import com.SwSoftware.OptiRouteTracker.services.ProductFacade;
 import com.SwSoftware.OptiRouteTracker.services.ProductService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(ApiPaths.baseApi + "/product")
+@AllArgsConstructor
 public class ProductController {
 
     private final ProductFacade productFacade;
     private final ProductService productService;
 
-    public ProductController(ProductFacade productFacade,ProductService productService){
-        this.productFacade = productFacade;
-        this.productService = productService;
-    }
 
     @GetMapping()
     public ResponseEntity<DtoResponseApi<Object>> getAllProducts(@RequestParam Integer page, @RequestParam Integer size){

@@ -6,19 +6,17 @@ import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoUpdateUser;
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
 import com.SwSoftware.OptiRouteTracker.services.UserService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(ApiPaths.baseApi + "/user")
+@AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
-
-    public UserController(UserService userService){
-        this.userService = userService;
-    }
 
     @GetMapping()
     public ResponseEntity<DtoResponseApi> getAllUsers(@RequestParam Integer page, @RequestParam Integer size){
