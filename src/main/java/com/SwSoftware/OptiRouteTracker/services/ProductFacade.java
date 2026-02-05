@@ -58,6 +58,7 @@ public class ProductFacade {
     }
 
     public DtoProduct updateProduct(DtoUpdateProduct product){
+
         ProductEntity productEntity = productService.getProductById(product.getId());
         InventoryEntity inventory = inventoryService.getInventoryById(product.getInventory());
 
