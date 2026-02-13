@@ -7,6 +7,7 @@ import com.SwSoftware.OptiRouteTracker.entities.CategoryEntity;
 import com.SwSoftware.OptiRouteTracker.exceptions.category.ExceptionCategoryNameAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.category.ExceptionCategoryNotFound;
 
+import com.SwSoftware.OptiRouteTracker.interfaces.ICategoryService;
 import com.SwSoftware.OptiRouteTracker.repositories.CategoryRepository;
 
 import com.SwSoftware.OptiRouteTracker.utils.mapper.CategoryMapper;
@@ -14,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +24,12 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class CategoryService {
+public class CategoryService implements ICategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
+    @Override
     public DtoCategory createCategory(DtoCreateCategory request){
         if(categoryRepository.existsByName(request.getName())){
             throw new ExceptionCategoryNameAlreadyInUse();
@@ -39,7 +42,7 @@ public class CategoryService {
         ));
     }
 
-
+    @Override
     public DtoPageableResponse<DtoCategory> getAllCategories(Integer page, Integer size){
         Page<CategoryEntity> categories = categoryRepository.findAll(PageRequest.of(page,size));
         List<DtoCategory> dtoCategories = categories.getContent().stream().map(categoryMapper::toDto).collect(Collectors.toList());
@@ -49,7 +52,7 @@ public class CategoryService {
                 dtoCategories
         );
     }
-
+    @Override
     public List<CategoryEntity> getCategoriesByIdsOrThrow(List<DtoCategory> categories) {
         if(categories != null){
             List<Long> idsCategories = categories.stream().map(DtoCategory::getId).toList();
@@ -63,16 +66,17 @@ public class CategoryService {
         return new ArrayList<>();
     }
 
+    @Override
     public DtoCategory getCategory(Long idCategory){
         return categoryMapper.toDto(getCategoryById(idCategory));
     }
 
-    public CategoryEntity getCategoryById(Long idCategory){
+    private CategoryEntity getCategoryById(Long idCategory){
         return categoryRepository.findById(idCategory).orElseThrow(ExceptionCategoryNotFound::new);
     }
 
 
-
+    @Override
     public DtoCategory updateCategory(DtoCategory request){
         CategoryEntity categoryEntity = getCategoryById(request.getId());
 
@@ -88,9 +92,4 @@ public class CategoryService {
         return categoryMapper.toDto(categoryEntity);
     }
 
-    public void disableCategory(Long idCategory){
-        CategoryEntity category = getCategoryById(idCategory);
-        category.setActive(false);
-        categoryRepository.save(category);
-    }
 }

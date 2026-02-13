@@ -9,6 +9,7 @@ import com.SwSoftware.OptiRouteTracker.entities.ProductEntity;
 import com.SwSoftware.OptiRouteTracker.entities.UserEntity;
 import com.SwSoftware.OptiRouteTracker.exceptions.product.ExceptionProductNameAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.product.ExceptionProductSerialNumberAlreadyInUse;
+import com.SwSoftware.OptiRouteTracker.interfaces.IProductFacade;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.ProductMapper;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
@@ -21,7 +22,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class ProductFacade {
+public class ProductFacade implements IProductFacade {
 
     private final ProductService productService;
     private final InventoryService inventoryService;
@@ -29,7 +30,7 @@ public class ProductFacade {
     private final ProductMapper productMapper;
     private final UserService userService;
 
-    @Transactional
+    @Override
     public DtoProduct createProduct(DtoCreateProduct data) {
 
         InventoryEntity inventory =
@@ -57,6 +58,7 @@ public class ProductFacade {
         return productMapper.toDto(productService.saveProduct(productEntity));
     }
 
+    @Override
     public DtoProduct updateProduct(DtoUpdateProduct product){
 
         ProductEntity productEntity = productService.getProductById(product.getId());

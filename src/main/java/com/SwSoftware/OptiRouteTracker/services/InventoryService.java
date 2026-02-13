@@ -10,10 +10,12 @@ import com.SwSoftware.OptiRouteTracker.entities.InventoryEntity;
 import com.SwSoftware.OptiRouteTracker.entities.ProductEntity;
 import com.SwSoftware.OptiRouteTracker.exceptions.inventory.ExceptionInventoryNameAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.inventory.ExceptionInventoryNotFound;
+import com.SwSoftware.OptiRouteTracker.interfaces.IInventoryService;
 import com.SwSoftware.OptiRouteTracker.repositories.InventoryRepository;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.InventoryMapper;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.ProductMapper;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,35 +27,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class InventoryService {
+@AllArgsConstructor
+public class InventoryService implements IInventoryService {
 
     private final InventoryRepository inventoryRepository;
     private final ProductService productService;
     private final InventoryMapper inventoryMapper;
     private final ProductMapper productMapper;
 
-    public InventoryService(InventoryRepository inventoryRepository,ProductService productService,
-                            InventoryMapper inventoryMapper, ProductMapper productMapper){
-        this.inventoryRepository = inventoryRepository;
-        this.productService = productService;
-        this.inventoryMapper = inventoryMapper;
-        this.productMapper = productMapper;
-    }
-
-    public void existInventory(Long idInventory){
+    private void existInventory(Long idInventory){
         if(!inventoryRepository.existsById(idInventory)){
             throw new ExceptionInventoryNotFound();
         }
     }
 
-    public boolean existInventoryById(Long id){
-        return inventoryRepository.existsById(id);
-    }
-
+    @Override
     public InventoryEntity getInventoryById(Long idInventory){
         return inventoryRepository.findById(idInventory).orElseThrow(ExceptionInventoryNotFound::new);
     }
 
+    @Override
     public DtoInventoryWithoutProducts createInventory(DtoCreateInventory data){
         if(inventoryRepository.existsByName(data.getName())){
             throw new ExceptionInventoryNameAlreadyInUse();
@@ -73,6 +66,7 @@ public class InventoryService {
         return inventoryMapper.toDtoByEntity(inventory);
     }
 
+    @Override
     public DtoInventoryWithProducts getAllDataInventory(Long idInventory){
 
         DtoInventoryWithoutProducts inventory = inventoryRepository.findInventoryById(idInventory)
@@ -93,10 +87,10 @@ public class InventoryService {
                 .build();
     }
 
-    public Page<ProductEntity> getProductsInventory(Long idInventory,Integer page, Integer size){
+    private Page<ProductEntity> getProductsInventory(Long idInventory,Integer page, Integer size){
         return productService.getProductsByIdInventory(idInventory,PageRequest.of(page,size));
     }
-
+    @Override
     public DtoPageableResponse<DtoInventoryWithoutProducts> getAllInventories(Integer page, Integer size){
         Page<InventoryEntity> inventory = inventoryRepository.findAll(PageRequest.of(page, size));
         List<DtoInventoryWithoutProducts> in = inventory.getContent().stream().map(inventoryMapper::toDtoByEntity).collect(Collectors.toList());
@@ -107,13 +101,14 @@ public class InventoryService {
         );
     }
 
-    @Transactional
+    @Override
     public void removeInventoryProduct(Long idProduct, Long idInventory){
         existInventory(idInventory);
         productService.existProduct(idProduct);
         productService.deleteProduct(idProduct,idInventory);
     }
 
+    @Override
     public DtoInventoryWithoutProducts updateInventory(DtoUpdateInventory data){
         InventoryEntity inventory = inventoryRepository.findById(data.getId()).orElseThrow(ExceptionInventoryNotFound::new);
 
@@ -133,7 +128,7 @@ public class InventoryService {
 
     }
 
-    @Transactional
+    @Override
     public void removeInventory(Long idInventory){
         inventoryRepository.deleteByInventoryId(idInventory);
         inventoryRepository.deleteById(idInventory);

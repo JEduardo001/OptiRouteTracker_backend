@@ -6,8 +6,8 @@ import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoCreateUser;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoResetPassword;
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApiLogIn;
+import com.SwSoftware.OptiRouteTracker.interfaces.IUserService;
 import com.SwSoftware.OptiRouteTracker.security.JwtSecurity.JwtService;
-import com.SwSoftware.OptiRouteTracker.services.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class AuthController {
 
-    private final UserService userService;
+    private final IUserService iUserService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
@@ -31,7 +31,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(DtoResponseApi.builder()
                 .status(HttpStatus.CREATED.value())
                 .message("User registred")
-                .data(userService.createUser(data))
+                .data(iUserService.createUser(data))
                 .build()
         );
     }
@@ -45,14 +45,14 @@ public class AuthController {
                 .status(HttpStatus.OK.value())
                 .message("logged")
                 .token(token)
-                .user(userService.getUserToLogin(data.getUsername()))
+                .user(iUserService.getUserToLogin(data.getUsername()))
                 .build()
         );
     }
 
     @PostMapping()
     public ResponseEntity<DtoResponseApi> resetPassword(@Valid @RequestBody DtoResetPassword request){
-        userService.resetPassword(request);
+        iUserService.resetPassword(request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(DtoResponseApi.builder()
                 .status(HttpStatus.NO_CONTENT.value())
                 .message("Password reset")

@@ -2,10 +2,9 @@ package com.SwSoftware.OptiRouteTracker.controllers.inventory;
 
 import com.SwSoftware.OptiRouteTracker.constants.ApiPaths;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoCreateInventory;
-import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoInventoryWithoutProducts;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.inventory.DtoUpdateInventory;
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
-import com.SwSoftware.OptiRouteTracker.services.InventoryService;
+import com.SwSoftware.OptiRouteTracker.interfaces.IInventoryService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,14 +16,14 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class InventoryController {
 
-    private final InventoryService inventoryService;
+    private final IInventoryService iInventoryService;
 
     @PostMapping()
     public ResponseEntity createInventory(@Valid @RequestBody DtoCreateInventory data){
         return ResponseEntity.status(HttpStatus.CREATED).body(DtoResponseApi.builder()
                 .status(HttpStatus.CREATED.value())
                 .message("Inventory created")
-                .data(inventoryService.createInventory(data))
+                .data(iInventoryService.createInventory(data))
                 .build()
         );
     }
@@ -34,7 +33,7 @@ public class InventoryController {
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("obtained inventory")
-                .data(inventoryService.getAllDataInventory(idInventory))
+                .data(iInventoryService.getAllDataInventory(idInventory))
                 .build()
         );
     }
@@ -44,14 +43,14 @@ public class InventoryController {
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("obtained inventories")
-                .data(inventoryService.getAllInventories(page,size))
+                .data(iInventoryService.getAllInventories(page,size))
                 .build()
         );
     }
 
     @DeleteMapping("/{idProduct}/{idInventory}")
     public ResponseEntity deleteProductInventory(@PathVariable Long idProduct, @PathVariable Long idInventory){
-        inventoryService.removeInventoryProduct(idProduct,idInventory);
+        iInventoryService.removeInventoryProduct(idProduct,idInventory);
         return  ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Removed inventory product")
@@ -62,7 +61,7 @@ public class InventoryController {
 
     @DeleteMapping("/{idInventory}")
     public ResponseEntity deleteInventory(@PathVariable Long idInventory){
-        inventoryService.removeInventory(idInventory);
+        iInventoryService.removeInventory(idInventory);
         return  ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Removed inventory")
@@ -75,7 +74,7 @@ public class InventoryController {
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Updated inventory")
-                .data(inventoryService.updateInventory(data))
+                .data(iInventoryService.updateInventory(data))
                 .build()
         );
     }

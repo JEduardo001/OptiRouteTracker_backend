@@ -8,10 +8,9 @@ import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionPasswordsDoNotMa
 import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserEmailAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserUsernameAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.user.ExceptionUserNotFound;
+import com.SwSoftware.OptiRouteTracker.interfaces.IUserService;
 import com.SwSoftware.OptiRouteTracker.repositories.UserRepository;
-import com.SwSoftware.OptiRouteTracker.utils.mapper.RoleMapper;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.UserMapper;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,29 +22,31 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class UserService {
+public class UserService implements IUserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
-    private final RoleMapper roleMapper;
     private final UserMapper userMapper;
 
 
+    @Override
     public DtoPageableResponse<DtoUser> getAllUsers(Integer page, Integer size){
         Page<UserEntity> users = userRepository.findAll(PageRequest.of(page,size));
         List<DtoUser> dtoUsers = users.getContent().stream().map(userMapper::toDto).collect(Collectors.toList());
-        return new DtoPageableResponse<DtoUser>(
+        return new DtoPageableResponse<>(
                 users.getTotalElements(),
                 users.getTotalPages(),
                 dtoUsers
         );
     }
 
+    @Override
     public UserEntity getUserById(Long idUser){
         return orThrow(userRepository.findById(idUser));
     }
 
+    @Override
     public DtoUser createUser(DtoCreateUser request){
 
         verifyPassword(request.getPassword(),request.getPasswordRepeat());
@@ -73,10 +74,12 @@ public class UserService {
         return userMapper.toDto(user);
     }
 
+    @Override
     public UserEntity getUserByUsername(String username){
         return orThrow(userRepository.findByUsername(username));
     }
 
+    @Override
     public DtoUser getUser(Long idUser){
         return userMapper.toDto(orThrow(userRepository.findById(idUser)));
     }
@@ -85,10 +88,12 @@ public class UserService {
         return user.orElseThrow(ExceptionUserNotFound::new);
     }
 
+    @Override
     public DtoUserLogIn getUserToLogin(String username){
         return userMapper.toUserDtoLogin(getUserByUsername(username));
     }
 
+    @Override
     public DtoUser updateUser(DtoUpdateUser request){
         UserEntity user = orThrow(userRepository.findById(request.getId()));
 
@@ -114,13 +119,14 @@ public class UserService {
         return userMapper.toDto(userRepository.save(user));
     }
 
+    @Override
     public void disableUser(Long idUser){
         UserEntity user = orThrow(userRepository.findById(idUser));
         user.setActive(false);
         userRepository.save(user);
     }
 
-    @Transactional
+    @Override
     public void resetPassword(DtoResetPassword request){
         UserEntity user = getUserById(request.getId());
 
@@ -137,7 +143,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void verifyPassword(String password, String confirmPassword){
+    private void verifyPassword(String password, String confirmPassword){
         if(!password.equals(confirmPassword)){
             throw new ExceptionPasswordsDoNotMatch();
         }

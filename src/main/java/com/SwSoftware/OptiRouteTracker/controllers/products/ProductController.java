@@ -4,6 +4,8 @@ import com.SwSoftware.OptiRouteTracker.constants.ApiPaths;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoCreateProduct;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.product.DtoUpdateProduct;
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
+import com.SwSoftware.OptiRouteTracker.interfaces.IProductFacade;
+import com.SwSoftware.OptiRouteTracker.interfaces.IProductService;
 import com.SwSoftware.OptiRouteTracker.services.ProductFacade;
 import com.SwSoftware.OptiRouteTracker.services.ProductService;
 import jakarta.validation.Valid;
@@ -17,8 +19,8 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class ProductController {
 
-    private final ProductFacade productFacade;
-    private final ProductService productService;
+    private final IProductFacade iProductFacade;
+    private final IProductService iProductService;
 
 
     @GetMapping()
@@ -26,7 +28,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Products obtained")
-                .data(productService.getAllProducts(page,size))
+                .data(iProductService.getAllProducts(page,size))
                 .build()
         );
     }
@@ -36,7 +38,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Product obtained")
-                .data(productService.getProduct(idProduct))
+                .data(iProductService.getProduct(idProduct))
                 .build()
         );
     }
@@ -46,7 +48,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(DtoResponseApi.builder()
                 .status(HttpStatus.CREATED.value())
                 .message("Product created")
-                .data(productFacade.createProduct(data))
+                .data(iProductFacade.createProduct(data))
                 .build()
         );
     }
@@ -56,14 +58,14 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Product updated")
-                .data(productFacade.updateProduct(data))
+                .data(iProductFacade.updateProduct(data))
                 .build()
         );
     }
 
     @DeleteMapping("/{idProduct}/{idInventory}")
     public ResponseEntity<DtoResponseApi<Object>> deleteProduct(@PathVariable Long idProduct,@PathVariable Long idInventory){
-        productService.deleteProduct(idProduct,idInventory);
+        iProductService.deleteProduct(idProduct,idInventory);
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Product elimined")

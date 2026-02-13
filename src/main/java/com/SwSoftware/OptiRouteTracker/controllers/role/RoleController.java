@@ -4,7 +4,7 @@ import com.SwSoftware.OptiRouteTracker.constants.ApiPaths;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.role.DtoCreateRole;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.role.DtoUpdateRole;
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
-import com.SwSoftware.OptiRouteTracker.services.RoleService;
+import com.SwSoftware.OptiRouteTracker.interfaces.IRoleService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class RoleController {
 
-    private final RoleService roleService;
+    private final IRoleService iRoleService;
 
     @GetMapping()
     public ResponseEntity<DtoResponseApi> getAllRoles(@RequestParam Integer page, @RequestParam Integer size){
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Roles obtained")
-                .data(roleService.getAllRoles(page,size))
+                .data(iRoleService.getAllRoles(page,size))
                 .build()
         );
     }
@@ -33,7 +33,7 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Role obtained")
-                .data(roleService.getRole(idRole))
+                .data(iRoleService.getRole(idRole))
                 .build()
         );
     }
@@ -43,7 +43,7 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(DtoResponseApi.builder()
                 .status(HttpStatus.CREATED.value())
                 .message("Role created")
-                .data(roleService.createRole(request))
+                .data(iRoleService.createRole(request))
                 .build()
         );
     }
@@ -53,7 +53,7 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Updated Role")
-                .data(roleService.updateRole(request))
+                .data(iRoleService.updateRole(request))
                 .build()
         );
     }

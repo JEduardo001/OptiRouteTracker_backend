@@ -4,7 +4,7 @@ import com.SwSoftware.OptiRouteTracker.constants.ApiPaths;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoCreateUser;
 import com.SwSoftware.OptiRouteTracker.dtos.dtosEntities.user.DtoUpdateUser;
 import com.SwSoftware.OptiRouteTracker.dtos.responseApi.DtoResponseApi;
-import com.SwSoftware.OptiRouteTracker.services.UserService;
+import com.SwSoftware.OptiRouteTracker.interfaces.IUserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    private final IUserService iUserService;
 
     @GetMapping()
     public ResponseEntity<DtoResponseApi> getAllUsers(@RequestParam Integer page, @RequestParam Integer size){
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Users obtained")
-                .data(userService.getAllUsers(page,size))
+                .data(iUserService.getAllUsers(page,size))
                 .build()
         );
     }
@@ -33,7 +33,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("User obtained")
-                .data(userService.getUser(idUser))
+                .data(iUserService.getUser(idUser))
                 .build()
         );
     }
@@ -43,7 +43,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(DtoResponseApi.builder()
                 .status(HttpStatus.CREATED.value())
                 .message("Created user")
-                .data(userService.createUser(request))
+                .data(iUserService.createUser(request))
                 .build()
         );
     }
@@ -53,14 +53,14 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Updated user")
-                .data(userService.updateUser(request))
+                .data(iUserService.updateUser(request))
                 .build()
         );
     }
 
     @PutMapping("/{idUser}")
     public ResponseEntity<DtoResponseApi> disableUser(@PathVariable Long idUser){
-        userService.disableUser(idUser);
+        iUserService.disableUser(idUser);
         return ResponseEntity.status(HttpStatus.OK).body(DtoResponseApi.builder()
                 .status(HttpStatus.OK.value())
                 .message("Disabled user")

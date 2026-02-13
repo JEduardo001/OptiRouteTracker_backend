@@ -10,6 +10,7 @@ import com.SwSoftware.OptiRouteTracker.entities.RoleEntity;
 import com.SwSoftware.OptiRouteTracker.exceptions.category.ExceptionCategoryNotFound;
 import com.SwSoftware.OptiRouteTracker.exceptions.role.ExceptionRoleNameAlreadyInUse;
 import com.SwSoftware.OptiRouteTracker.exceptions.role.ExceptionRoleNotFound;
+import com.SwSoftware.OptiRouteTracker.interfaces.IRoleService;
 import com.SwSoftware.OptiRouteTracker.repositories.RoleRepository;
 import com.SwSoftware.OptiRouteTracker.utils.mapper.RoleMapper;
 import lombok.AllArgsConstructor;
@@ -26,24 +27,21 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class RoleService {
+public class RoleService implements IRoleService {
 
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
 
 
-    public RoleEntity getRoleById(Long idRole){
+    private RoleEntity getRoleById(Long idRole){
         return roleRepository.findById(idRole).orElseThrow(ExceptionRoleNotFound::new);
     }
 
-    public boolean existRoleByName(String name){
+    private boolean existRoleByName(String name){
         return roleRepository.existsByName(name);
     }
 
-    public boolean existRoleById(Long idRole){
-        return roleRepository.existsById(idRole);
-    }
-
+    @Override
     public List<RoleEntity> getRolesByIdsOrThrow(List<DtoRole> roles) {
         if(roles != null){
             List<Long> rolesId =  roles.stream().map(DtoRole::getId).toList();
@@ -57,6 +55,7 @@ public class RoleService {
         return new LinkedList<>();
     }
 
+    @Override
     public DtoPageableResponse<DtoRole> getAllRoles(Integer page, Integer size){
         Page<RoleEntity> roles = roleRepository.findAll(PageRequest.of(page,size));
         List<DtoRole> dtoRoles = roles.getContent().stream().map(roleMapper::toDto).collect(Collectors.toList());
@@ -67,10 +66,12 @@ public class RoleService {
         );
     }
 
+    @Override
     public DtoRole getRole(Long idRole){
         return roleMapper.toDto(getRoleById(idRole));
     }
 
+    @Override
     public DtoRole createRole(DtoCreateRole request){
         if(existRoleByName(request.getName())){
             throw new ExceptionRoleNameAlreadyInUse();
@@ -84,6 +85,7 @@ public class RoleService {
         return roleMapper.toDto(roleRepository.save(role));
     }
 
+    @Override
     public DtoRole updateRole(DtoUpdateRole request){
         RoleEntity role = getRoleById(request.getId());
         if(roleRepository.existsByNameAndIdNot(request.getName(), request.getId())){
