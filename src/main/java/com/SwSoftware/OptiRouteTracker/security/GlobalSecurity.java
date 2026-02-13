@@ -42,6 +42,7 @@ public class GlobalSecurity {
                                 "/swagger-ui/**",
                                 "/v3/api-docs"
                         ).permitAll()
+                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .cors(cors -> cors.configurationSource(corsConfiguration()))
